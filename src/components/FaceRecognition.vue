@@ -1,11 +1,11 @@
 <template>
   <div class="face-recognition">
-    <button @click="start">开始4</button>
+    <button @click="start">开始</button>
     <video
       id="video"
       class="video"
       autoplay
-      playinline>
+      playsinline>
     </video>
     <!--描绘video截图-->
     <canvas
@@ -13,9 +13,7 @@
       class="canvas">
     </canvas>
     <img
-      v-for="(item, index) in imgList"
-      :key="index"
-      :src="item"
+      :src="img"
       alt="">
   </div>
 </template>
@@ -27,12 +25,11 @@ export default {
   name: 'FaceRecognition',
   data () {
     return {
-      imgList: []
+      img: ''
     }
   },
   methods: {
     start () {
-      console.log(navigator)
       if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia){
         this.getUserMediaToPhoto({
           audio: false,
@@ -44,19 +41,15 @@ export default {
     },
     getUserMediaToPhoto (constraints, success, error) {
       if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-        console.log(1)
         //最新标准API
         navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error)
       }else if (navigator.webkitGetUserMedia) {
-        console.log(2)
         //webkit核心浏览器
         navigator.webkitGetUserMedia(constraints, success, error)
       }else if(navigator.mozGetUserMedia){
-        console.log(3)
         //firefox浏览器
         navigator.mozGetUserMedia(constraints, success, error)
       }else if(navigator.getUserMedia){
-        console.log(4)
         //旧版API
         navigator.getUserMedia(constraints, success, error)
       }
@@ -64,7 +57,6 @@ export default {
     success (stream) {
       let video = document.getElementById('video') 
       //兼容webkit核心浏览器
-      // let compatibleURL = window.URL || window.webkitURL
       //将视频流转化为video的源
       video.srcObject = stream
       // video.play()//播放视频
@@ -75,15 +67,21 @@ export default {
       console.log('访问用户媒体失败：', error.name, error.message)
     },
     postFace (video) {
+      let scale = 0.4
       let canvas = document.getElementById('canvas')
       let context = canvas.getContext('2d')
-      setInterval(() => {
-        context.drawImage(video,0,0,480,320)
-        this.imgList.push(canvas.toDataURL('image/jpg'))
-        // 获取完整的base64编码
-        // img = img.split(',')[1]
-        console.log('111')
-      }, 2000)
+      video.addEventListener('canplay', () => {
+        console.log(video.videoWidth, video.videoHeight)
+        canvas.width = video.videoWidth * scale
+        canvas.height = video.videoHeight * scale
+        setInterval(() => {
+          context.drawImage(video, 0, 0, canvas.width, canvas.height)
+          this.img = canvas.toDataURL('image/jpg')
+          // 获取完整的base64编码
+          // img = img.split(',')[1]
+        }, 1000)
+      });
+      
     }
   }
 }
