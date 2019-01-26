@@ -1,4 +1,4 @@
-# face-recognition
+# face-recognition/client 人脸识别demo用户端
 
 ## Project setup
 ```
