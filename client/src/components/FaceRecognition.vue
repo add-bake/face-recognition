@@ -17,6 +17,7 @@
 
 <script>
 import '@/utils/vconsole'
+import errorTips from '@/utils/errorTips'
 
 export default {
   name: 'FaceRecognition',
@@ -88,7 +89,7 @@ export default {
       .then(res => {
         let {data} = res
         console.log(data)
-        alert(data.code === 0 ? data.result.score >= 80 ? '检测通过' : '检测不通过' : data.error_msg || '验证错误')
+        alert(data.code === 0 ? data.result.score >= 80 ? '检测通过' : '检测不通过' : errorTips(data.code) || '人脸识别未知错误')
       })
       .catch(err => {
         console.log(err)
