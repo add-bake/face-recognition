@@ -1,6 +1,5 @@
 <template>
   <div class="face-recognition">
-    <button @click="start">开始</button>
     <video
       id="video"
       class="video"
@@ -8,13 +7,11 @@
       playsinline>
     </video>
     <!--描绘video截图-->
+    <div class="modal"></div>
     <canvas
       id="canvas"
       class="canvas">
     </canvas>
-    <img
-      :src="img"
-      alt="">
   </div>
 </template>
 
@@ -25,8 +22,13 @@ export default {
   name: 'FaceRecognition',
   data () {
     return {
-      img: ''
+      img: '',
+      clientHeight: `${document.documentElement.clientHeight}px`
     }
+  },
+  mounted () {
+    console.log(this.clientHeight)
+    this.start()
   },
   methods: {
     start () {
@@ -90,9 +92,19 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .video,
-.canvas {
-  width: 100%;
-  height: 200px;
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #eee;
+}
+.modal {
+  z-index: 2;
+  background: url("../assets/modal_face_auth.png") 0 0 no-repeat;
+  background-size: cover;
 }
 .canvas {
   display: none;
