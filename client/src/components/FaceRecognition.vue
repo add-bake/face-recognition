@@ -22,12 +22,10 @@ export default {
   name: 'FaceRecognition',
   data () {
     return {
-      img: '',
       clientHeight: `${document.documentElement.clientHeight}px`
     }
   },
   mounted () {
-    console.log(this.clientHeight)
     this.start()
   },
   methods: {
@@ -73,17 +71,28 @@ export default {
       let canvas = document.getElementById('canvas')
       let context = canvas.getContext('2d')
       video.addEventListener('canplay', () => {
-        console.log(video.videoWidth, video.videoHeight)
         canvas.width = video.videoWidth * scale
         canvas.height = video.videoHeight * scale
-        setInterval(() => {
+        setTimeout(() => {
           context.drawImage(video, 0, 0, canvas.width, canvas.height)
-          this.img = canvas.toDataURL('image/jpg')
-          // 获取完整的base64编码
-          // img = img.split(',')[1]
-        }, 1000)
+          let img = canvas.toDataURL('image/jpg')
+          
+          this.sendAuth(img.split(',')[1]) // 获取完整的base64编码
+        }, 3000)
       });
-      
+    },
+    sendAuth (src) {
+      this.$axios.post('/auth', {
+        src: src
+      })
+      .then(res => {
+        let {data} = res
+        console.log(data)
+        alert(data.code === 0 ? data.result.score >= 80 ? '检测通过' : '检测不通过' : data.error_msg || '验证错误')
+      })
+      .catch(err => {
+        console.log(err)
+      })
     }
   }
 }
