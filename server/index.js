@@ -32,7 +32,7 @@ app.all('*', (req, res, next) => {
   next();
 })
 
-// 在线活体检测配置
+// 获取token配置
 const param = qs.stringify({
   'grant_type': 'client_credentials',
   'client_id': 'iamToWyWiyufkLBOuaY7F1M0',
