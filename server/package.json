@@ -1,0 +1,13 @@
+{
+  "name": "face-recognition-server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "node index"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "express": "^4.16.4",
+    "request": "^2.88.0"
+  }
+}
